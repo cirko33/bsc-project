@@ -1,2 +1,5 @@
-# bsc-project
-Bachelors project
+# Bachelors project
+Technologies:
+- .NET Core 6
+- React
+- MySQL DB
