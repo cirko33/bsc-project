@@ -1,0 +1,2 @@
+# bsc-project
+Bachelors project
