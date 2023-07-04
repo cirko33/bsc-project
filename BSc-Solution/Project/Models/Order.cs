@@ -2,6 +2,7 @@
 
 namespace Project.Models
 {
+    public enum OrderState { Waiting, Confirmed, Cancelled }
     public class Order : BaseClass
     {
         [Required]
@@ -14,5 +15,7 @@ namespace Project.Models
         public ProductKey? ProductKey { get; set; }
         [Required]
         public double? Price { get; set; }
+        [Required]
+        public OrderState State { get; set; } = OrderState.Waiting;
     }
 }

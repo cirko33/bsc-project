@@ -47,7 +47,7 @@ namespace Project.Controllers
 
         [Authorize(Roles = "Seller")]
         [HttpPost]
-        public async Task<IActionResult> InsertProduct(CreateProductDTO productDTO)
+        public async Task<IActionResult> InsertProduct([FromForm]CreateProductDTO productDTO)
         {
             if (!int.TryParse(User.Claims.First(c => c.Type == "Id").Value, out int id))
                 throw new BadRequestException("Bad ID. Logout and login.");
@@ -58,7 +58,7 @@ namespace Project.Controllers
 
         [Authorize(Roles = "Seller")]
         [HttpPut]
-        public async Task<IActionResult> UpdateProduct(ProductDTO productDTO)
+        public async Task<IActionResult> UpdateProduct([FromForm]ProductDTO productDTO)
         {
             if (!int.TryParse(User.Claims.First(c => c.Type == "Id").Value, out int id))
                 throw new BadRequestException("Bad ID. Logout and login.");

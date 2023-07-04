@@ -11,11 +11,9 @@ namespace Project.Mapper
             CreateMap<User, RegisterDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, UpdateUserDTO>().ReverseMap();
+            CreateMap<User, UserShortDTO>().ReverseMap();
 
-            CreateMap<Product, ProductDTO>().ReverseMap().AfterMap((x, y) =>
-            {
-                x.Amount = y.Keys!.FindAll(z => !z.Sold).Count;
-            });
+            CreateMap<ProductDTO, Product>().ReverseMap().ForMember(x => x.Amount, y => y.MapFrom(z => z.Keys!.FindAll(x => !x.Sold).Count));
             CreateMap<Product, CreateProductDTO>().ReverseMap();
 
             CreateMap<Order, OrderDTO>().ReverseMap();

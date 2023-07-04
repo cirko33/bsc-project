@@ -42,8 +42,9 @@ namespace Project.Services
 
         public async Task<List<ProductDTO>> GetProducts()
         {
-            var products = await _unitOfWork.Products.GetAll(null, x => x.OrderByDescending(y => y.Id), new() { "Seller" });
-            return _mapper.Map<List<ProductDTO>>(products);
+            var products = await _unitOfWork.Products.GetAll(null, x => x.OrderByDescending(y => y.Id), new() { "Seller", "Keys" });
+            var res = _mapper.Map<List<ProductDTO>>(products);
+            return res;
         }
 
         public async Task<List<ProductDTO>> GetSellerProducts(int userId)

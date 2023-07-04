@@ -8,6 +8,6 @@ namespace Project.Interfaces
         Task<List<OrderDTO>> GetOrders(int userId);
         Task<List<OrderDTO>> GetOrders();
         Task<OrderDTO> GetOrder(int id, int userId);
-        Task MakeOrder(CreateOrderDTO orderDTO, int userId);
+        Task<Order> MakeOrder(int productId, int userId);
     }
 }

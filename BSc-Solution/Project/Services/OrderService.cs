@@ -45,12 +45,12 @@ namespace Project.Services
             return _mapper.Map<List<OrderDTO>>(orders);
         }
 
-        public async Task MakeOrder(CreateOrderDTO orderDTO, int userId)
+        public async Task<Order> MakeOrder(int productId, int userId)
         {
             var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Buyer, new() { "Orders.Key.Product" })
                 ?? throw new UnauthorizedException("This user doesn't exist!");
 
-            var product = await _unitOfWork.Products.Get(x => x.Id == orderDTO.ProductId, new() { "Keys" })
+            var product = await _unitOfWork.Products.Get(x => x.Id == productId, new() { "Keys" })
                 ?? throw new NotFoundException("Product doesn't exist");
 
             var key = product.Keys!.Find(x => !x.Sold) 
@@ -67,7 +67,8 @@ namespace Project.Services
             key.Sold = true;
             _unitOfWork.Keys.Update(key);
             await _unitOfWork.Orders.Insert(order);
-            await _unitOfWork.Save(); 
+            await _unitOfWork.Save();
+            return order;
         }
     }
 }

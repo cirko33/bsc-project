@@ -98,9 +98,8 @@ namespace Project.Services
 
         public async Task<string> Login(LoginDTO loginDTO)
         {
-            var user = await _unitOfWork.Users.Get(x => x.Email == loginDTO.Email);
-            if (user == null)
-                throw new NotFoundException($"Incorrect email. Try again.");
+            var user = await _unitOfWork.Users.Get(x => x.Username == loginDTO.Username)
+                ?? throw new NotFoundException($"Incorrect email. Try again.");
 
             if(user.Blocked && user.Type != UserType.Administrator)
             {

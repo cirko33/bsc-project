@@ -86,6 +86,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IHelperService, HelperService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 var app = builder.Build();
 app.Services.GetService<ILoggerFactory>().AddFile(builder.Configuration["Logging:Path:File"]);
