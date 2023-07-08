@@ -1,6 +1,7 @@
 import jwtDecode from "jwt-decode";
 import api from "../api/api";
-import {toFormData} from "../helpers/helpers";
+import { toFormData } from "../helpers/helpers";
+import { toast } from "react-toastify";
 
 export const getToken = () => {
   return localStorage.getItem("token");
@@ -9,9 +10,9 @@ export const getToken = () => {
 export const register = async (data) => {
   try {
     const formData = toFormData(data);
-    await api.post("/user/register", formData);
+    await api.post("/user/register", formData, { headers: { "Content-Type": "multipart/form-data" } });
   } catch (e) {
-    e.response.data.messages.forEach((element) => {
+    Object.values(e.response.data.errors).forEach((element) => {
       alert(element);
     });
     return Promise.reject(e);
@@ -23,7 +24,7 @@ export const login = async (data) => {
     const res = await api.post("/user/login", data);
     localStorage.setItem("token", res.data);
   } catch (e) {
-    e.response.data.messages.forEach((element) => {
+    Object.values(e.response.data.errors).forEach((element) => {
       alert(element);
     });
     return Promise.reject(e);
@@ -31,7 +32,7 @@ export const login = async (data) => {
 };
 
 export const logout = () => {
-  localStorage.clear();
+  localStorage.removeItem("token");
 };
 
 export const getUser = async () => {
@@ -39,7 +40,7 @@ export const getUser = async () => {
     const res = await api.get("/user");
     return res.data;
   } catch (e) {
-    e.response.data.messages.forEach((element) => {
+    Object.values(e.response.data.errors).forEach((element) => {
       alert(element);
     });
     return Promise.reject(e);
@@ -49,12 +50,14 @@ export const getUser = async () => {
 export const setUser = async (data) => {
   try {
     const formData = toFormData(data);
-    const res = await api.put("/user", formData);
+    const res = await api.put("/user", formData, { headers: { "Content-Type": "multipart/form-data" } });
     return res.data;
   } catch (e) {
-    e.response.data.messages.forEach((element) => {
-      alert(element);
+    let rep = "";
+    Object.values(e.response.data.errors).forEach((element) => {
+      rep += element + "\n";
     });
+    toast.warning(rep);
     return Promise.reject(e);
   }
 };
@@ -72,4 +75,18 @@ export const userInRole = (role) => {
 
 export const loggedIn = () => {
   return getToken() !== null;
-}
+};
+
+export const getImage = async (data) => {
+  try {
+    const res = await api.put("/user/image/" + data);
+    return res.data;
+  } catch (e) {
+    let rep = "";
+    Object.values(e.response.data.errors).forEach((element) => {
+      rep += element + "\n";
+    });
+    toast.warning(rep);
+    return Promise.reject(e);
+  }
+};

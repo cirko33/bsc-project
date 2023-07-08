@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using Project.DTOs;
 using Project.ExceptionMiddleware.Exceptions;
 using Project.Interfaces;
@@ -65,7 +66,7 @@ namespace Project.Controllers
         }
 
         [Authorize(Roles = "Administrator")]
-        [HttpGet("All")]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
             var users = await _userService.GetUsers();
@@ -78,6 +79,13 @@ namespace Project.Controllers
         {
             await _userService.ChangeBlockUser(id);
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("image/{name}")]
+        public async Task<IActionResult> GetImage(string name)
+        {
+            return File(_userService.GetImage(name), "image/*");
         }
     }
 }

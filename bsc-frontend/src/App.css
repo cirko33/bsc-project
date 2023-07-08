@@ -40,3 +40,30 @@
 .read-the-docs {
   color: #888;
 }
+
+.img-profile {
+  max-width: 120px;
+  max-height: 120px;
+  width: fit-content;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1vw solid #f3f3f3;
+  border-top: 1vw solid #3498db;
+  border-radius: 50%;
+  width: 10vw;
+  height: 10vw;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

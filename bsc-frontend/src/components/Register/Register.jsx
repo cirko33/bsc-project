@@ -3,16 +3,19 @@ import { Button, Card, MenuItem, Select, TextField, Typography } from "@mui/mate
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { login, register } from "../../services/userService";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState({
     username: "",
     password: "",
     email: "",
     fullName: "",
-    birthday: "",
+    birthday: dayjs("1/1/1999"),
     address: "",
-    type: "",
+    type: "1",
     imageFile: "",
   });
 
@@ -20,15 +23,27 @@ const Register = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    alert("A");
+    for (let key in data) {
+      if (data[key] === "") {
+        alert("Please fill all fields");
+        return;
+      }
+    }
+    setData({ ...data, birthday: dayjs(data.birthday).format("DD/MM/YYYY") });
+    console.log("🚀 ~ file: Register.jsx:34 ~ submit ~ data:", data);
+
+    await register(data);
+    alert("Registered successfully");
+    await login({ username: data.username, password: data.password });
+    navigate("/");
   };
 
   return (
-    <Card component="form" sx={{ padding: "20px", margin: "20px", maxWidth: "20rem", bgcolor: "#2f3e6f" }}>
+    <Card component="form" sx={{ padding: "20px", margin: "20px", maxWidth: "24rem", bgcolor: "#2f3e6f" }}>
       <Typography variant="h4" sx={{ marginBottom: "30px", textAlign: "center" }}>
-        Login
+        Register
       </Typography>
 
       <TextField
@@ -70,13 +85,23 @@ const Register = () => {
       <DatePicker
         required
         sx={{ marginBottom: "10px", width: "100%" }}
+        label="Birthday"
         value={data.birthday}
         type="date"
-        min="1900-01-01"
-        max={`${new Date().getFullYear() - 18}-01-01`}
+        inputFormat="DD/MM/YYYY"
+        format="DD/MM/YYYY"
         onChange={(e) => {
-          console.log(e);
-          setData({ ...data, birthday: dayjs(e.$d).format('YYYY-MM-DD') });
+          const val = dayjs(e.$d);
+          if (
+            !dayjs(val).isValid() ||
+            dayjs(val).isAfter(dayjs().subtract(18, "years")) ||
+            dayjs(val).isBefore(dayjs("1/1/1900"))
+          ) {
+            alert("Invalid birthday");
+            return;
+          }
+
+          setData({ ...data, birthday: val });
         }}
       />
       <TextField
@@ -88,6 +113,7 @@ const Register = () => {
         label="Address"
         onChange={handleChange}
       />
+      <img src={data.imageFile ? URL.createObjectURL(data.imageFile) : "./default.jpg"} className="img-profile" />
       <TextField
         required
         sx={{ marginBottom: "10px", width: "100%" }}
@@ -103,9 +129,7 @@ const Register = () => {
         label="Type"
         onChange={handleChange}
       >
-        <MenuItem value="1" selected>
-          Seller
-        </MenuItem>
+        <MenuItem value="1">Seller</MenuItem>
         <MenuItem value="2">Buyer</MenuItem>
       </Select>
       <Button

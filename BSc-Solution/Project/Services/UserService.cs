@@ -99,7 +99,7 @@ namespace Project.Services
         public async Task<string> Login(LoginDTO loginDTO)
         {
             var user = await _unitOfWork.Users.Get(x => x.Username == loginDTO.Username)
-                ?? throw new NotFoundException($"Incorrect email. Try again.");
+                ?? throw new NotFoundException($"Incorrect username. Try again.");
 
             if(user.Blocked && user.Type != UserType.Administrator)
             {
@@ -150,6 +150,15 @@ namespace Project.Services
             user.Blocked = !user.Blocked;
             _unitOfWork.Users.Update(user);
             await _unitOfWork.Save();
+        }
+
+        public string GetImage(string name)
+        {
+            string img = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources/" + name);
+            if (!File.Exists(img))
+                throw new NotFoundException("No image with that name");
+
+            return img!;
         }
     }
 }

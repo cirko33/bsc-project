@@ -1,6 +1,9 @@
 import { Button, Card, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useState } from "react";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { getImage, getUser, setUser } from "../../services/userService";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const [data, setData] = useState({
@@ -11,20 +14,28 @@ const Profile = () => {
     birthday: "",
     address: "",
   });
+  useEffect(() => {
+    getUser()
+      .then((res) => setData({ ...data, ...res, birthday: dayjs(res.birthday) }))
+      .catch((err) => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    alert("A");
+
+    await setUser(data);
+    toast.success("Profile updated successfully");
   };
 
   return (
-    <Card component="form" sx={{ padding: "20px", margin: "20px", maxWidth: "20rem", bgcolor: "#2f3e6f" }}>
+    <Card component="form" sx={{ padding: "20px", margin: "20px", maxWidth: "24rem", bgcolor: "#2f3e6f" }}>
       <Typography variant="h4" sx={{ marginBottom: "30px", textAlign: "center" }}>
-        Login
+        Profile
       </Typography>
 
       <TextField
@@ -37,12 +48,19 @@ const Profile = () => {
         onChange={handleChange}
       />
       <TextField
-        required
         sx={{ marginBottom: "10px", width: "100%" }}
         value={data.password}
         name="password"
         type="password"
         label="Password"
+        onChange={handleChange}
+      />
+      <TextField
+        sx={{ marginBottom: "10px", width: "100%" }}
+        value={data.newPassword}
+        name="newPassword"
+        type="password"
+        label="New Password"
         onChange={handleChange}
       />
       <TextField
@@ -66,13 +84,23 @@ const Profile = () => {
       <DatePicker
         required
         sx={{ marginBottom: "10px", width: "100%" }}
+        label="Birthday"
         value={data.birthday}
         type="date"
-        min="1900-01-01"
-        max={`${new Date().getFullYear() - 18}-01-01`}
+        inputFormat="DD/MM/YYYY"
+        format="DD/MM/YYYY"
         onChange={(e) => {
-          console.log(e);
-          setData({ ...data, birthday: e });
+          const val = dayjs(e.$d);
+          if (
+            !dayjs(val).isValid() ||
+            dayjs(val).isAfter(dayjs().subtract(18, "years")) ||
+            dayjs(val).isBefore(dayjs("1/1/1900"))
+          ) {
+            alert("Invalid birthday");
+            return;
+          }
+
+          setData({ ...data, birthday: val });
         }}
       />
       <TextField
@@ -83,6 +111,18 @@ const Profile = () => {
         type="text"
         label="Address"
         onChange={handleChange}
+      />
+      <img
+        src={data.imageFile ? URL.createObjectURL(data.imageFile) : data.image ? getImage(data.image) : "./default.jpg"}
+        className="img-profile"
+      />
+      <TextField
+        required
+        sx={{ marginBottom: "10px", width: "100%" }}
+        type="file"
+        onChange={(e) => {
+          e.target.files[0] && setData({ ...data, imageFile: e.target.files[0] });
+        }}
       />
       <Button
         variant="contained"
@@ -95,7 +135,9 @@ const Profile = () => {
         }}
         type="submit"
         onClick={submit}
-      ></Button>
+      >
+        Update profile
+      </Button>
     </Card>
   );
 };

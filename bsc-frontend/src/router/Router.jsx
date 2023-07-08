@@ -1,21 +1,29 @@
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
-import { loggedIn } from '../services/userService';
+import ProtectedRoute from "./ProtectedRoute";
 
-const Dashboard = lazy(() => import('../components/Dashboard/Dashboard'));
-const Login = lazy(() => import('../components/Login/Login'));
-const Register = lazy(() => import('../components/Register/Register'));
+const Dashboard = lazy(() => import("../components/Dashboard/Dashboard"));
+const Login = lazy(() => import("../components/Login/Login"));
+const Register = lazy(() => import("../components/Register/Register"));
+const Profile = lazy(() => import("../components/Profile/Profile"));
 
 const Router = () => {
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+            <div className="loading-spinner"></div>
+          </div>
+        }
+      >
         <Routes>
-          <Route path="/" element={loggedIn() ? <Navigate to='/dashboard'/> : <Login />} />
-          <Route path="/login" element={loggedIn() ? <Navigate to='/dashboard'/> : <Login />} />
-          <Route path="/register" element={loggedIn() ? <Navigate to='/dashboard'/> : <Register />} />
-          <Route path="/dashboard" element={!loggedIn() ? <Navigate to='/'/> : <Dashboard />} />
-          <Route path="*" element={<Navigate to='/'/>} />
+          <Route path="/" element={<ProtectedRoute component={<Login />} />} />
+          <Route path="/login" element={<ProtectedRoute component={<Login />} />} />
+          <Route path="/register" element={<ProtectedRoute component={<Register />} />} />
+          <Route path="/dashboard" element={<ProtectedRoute isLogged={true} component={<Dashboard />} />} />
+          <Route path="/profile" element={<ProtectedRoute isLogged={true} component={<Profile />} />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Suspense>
     </>
