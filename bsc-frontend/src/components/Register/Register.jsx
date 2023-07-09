@@ -32,7 +32,6 @@ const Register = () => {
       }
     }
     setData({ ...data, birthday: dayjs(data.birthday).format("DD/MM/YYYY") });
-    console.log("🚀 ~ file: Register.jsx:34 ~ submit ~ data:", data);
 
     await register(data);
     alert("Registered successfully");

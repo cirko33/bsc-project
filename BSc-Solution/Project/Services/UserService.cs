@@ -5,6 +5,7 @@ using Project.DTOs;
 using Project.ExceptionMiddleware.Exceptions;
 using Project.Interfaces;
 using Project.Models;
+using System.Text.RegularExpressions;
 using BC = BCrypt.Net;
 
 namespace Project.Services
@@ -152,13 +153,16 @@ namespace Project.Services
             await _unitOfWork.Save();
         }
 
-        public string GetImage(string name)
+        public async Task<byte[]> GetImage(string name)
         {
-            string img = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources/" + name);
+            if (!Regex.Match(name, "[0-9a-zA-Z]+.(png|jpg|jpeg)").Success)
+                throw new BadRequestException("Format: name.ext");
+
+            string img = Path.Combine("Resources", name);
             if (!File.Exists(img))
                 throw new NotFoundException("No image with that name");
 
-            return img!;
+            return await File.ReadAllBytesAsync(img!);
         }
     }
 }

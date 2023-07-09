@@ -1,11 +1,13 @@
 import { Button, Card, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
-import { getImage, getUser, setUser } from "../../services/userService";
+import { useContext, useEffect, useState } from "react";
+import { getImageLink, putUser } from "../../services/userService";
 import { toast } from "react-toastify";
+import UserContext from "../../store/user-context";
 
 const Profile = () => {
+  const { user, updateUser } = useContext(UserContext);
   const [data, setData] = useState({
     username: "",
     password: "",
@@ -15,9 +17,7 @@ const Profile = () => {
     address: "",
   });
   useEffect(() => {
-    getUser()
-      .then((res) => setData({ ...data, ...res, birthday: dayjs(res.birthday) }))
-      .catch((err) => console.log(err));
+    setData({ ...data, ...user, birthday: dayjs(user.birthday) });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -27,8 +27,8 @@ const Profile = () => {
 
   const submit = async (e) => {
     e.preventDefault();
-
-    await setUser(data);
+    await putUser(data);
+    updateUser(data);
     toast.success("Profile updated successfully");
   };
 
@@ -113,7 +113,9 @@ const Profile = () => {
         onChange={handleChange}
       />
       <img
-        src={data.imageFile ? URL.createObjectURL(data.imageFile) : data.image ? getImage(data.image) : "./default.jpg"}
+        src={
+          data.imageFile ? URL.createObjectURL(data.imageFile) : data.image ? getImageLink(data.image) : "./default.jpg"
+        }
         className="img-profile"
       />
       <TextField

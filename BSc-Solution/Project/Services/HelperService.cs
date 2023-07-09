@@ -48,7 +48,7 @@ namespace Project.Services
             if (image.Length == 0)
                 return "";
 
-            if (image.ContentType != "image/jpg" || image.ContentType != "image/jpeg" || image.ContentType != "image/png")
+            if (image.ContentType != "image/jpg" && image.ContentType != "image/jpeg" && image.ContentType != "image/png")
                 throw new BadRequestException("Image must be jpg or png");
 
             using (var img = Image.Load(image.OpenReadStream()))
@@ -59,9 +59,9 @@ namespace Project.Services
                     Mode = ResizeMode.Max
                 }));
 
-                string path = Path.Combine("Images", DateTime.Now.Ticks.ToString() + Path.GetExtension(image.FileName));
-                img.Save(path);
-                return path;
+                string name = DateTime.Now.Ticks.ToString() + Path.GetExtension(image.FileName);
+                img.Save(Path.Combine("Resources", name));
+                return name;
             }
         }
 

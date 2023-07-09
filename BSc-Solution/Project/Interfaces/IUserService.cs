@@ -11,6 +11,6 @@ namespace Project.Interfaces
         Task UpdateUser(int id, UpdateUserDTO user);
         Task<List<UserDTO>> GetUsers();
         Task ChangeBlockUser(int id);
-        string GetImage(string name);
+        Task<byte[]> GetImage(string name);
     }
 }

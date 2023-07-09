@@ -74,18 +74,17 @@ namespace Project.Controllers
         }
 
         [Authorize(Roles = "Administrator")]
-        [HttpPost("block/{id}")]
+        [HttpDelete("block/{id}")]
         public async Task<IActionResult> ChangeBlockStatus(int id)
         {
             await _userService.ChangeBlockUser(id);
             return Ok();
         }
 
-        [Authorize]
         [HttpGet("image/{name}")]
         public async Task<IActionResult> GetImage(string name)
         {
-            return File(_userService.GetImage(name), "image/*");
+            return File(await _userService.GetImage(name), "image/*");
         }
     }
 }

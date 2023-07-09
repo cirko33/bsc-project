@@ -11,6 +11,7 @@ namespace Project.DTOs
         public DateTime Birthday { get; set; }
         public string? Address { get; set; }
         public UserType Type { get; set; }
+        public bool Blocked { get; set; }
         public string? Image { get; set; }
     }
 }

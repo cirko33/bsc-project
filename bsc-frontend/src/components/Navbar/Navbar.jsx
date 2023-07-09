@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import * as React from "react";
+import { useContext, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
@@ -13,7 +13,8 @@ import {
   Tooltip,
   MenuItem,
 } from "@mui/material";
-import { loggedIn, logout } from "../../services/userService";
+import { getImageLink, loggedIn, logout } from "../../services/userService";
+import UserContext from "../../store/user-context";
 
 const pages = ["Login", "Register"];
 const loggedPages = ["Home"];
@@ -21,8 +22,9 @@ const settings = ["Profile", "Home", "Logout"];
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { user } = useContext(UserContext);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -120,7 +122,7 @@ const Navbar = () => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="U" />
+                  <Avatar src={user && getImageLink(user.image)} />
                 </IconButton>
               </Tooltip>
               <Menu
