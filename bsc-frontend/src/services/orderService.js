@@ -10,3 +10,13 @@ export const getOrders = async () => {
     return Promise.reject(e);
   }
 };
+
+export const getSellerOrders = async () => {
+  try {
+    const res = await api.get("/order/seller");
+    return res.data;
+  } catch (e) {
+    throwWarning(e);
+    return Promise.reject(e);
+  }
+};

@@ -41,8 +41,8 @@ namespace Project.Controllers
             if (!int.TryParse(User.Claims.First(c => c.Type == "Id").Value, out int id))
                 throw new BadRequestException("Bad ID. Logout and login.");
 
-            await _productService.GetSellerProducts(id);
-            return Ok();
+            var products = await _productService.GetSellerProducts(id);
+            return Ok(products);
         }
 
         [Authorize(Roles = "Seller")]
@@ -77,5 +77,27 @@ namespace Project.Controllers
             await _productService.DeleteProduct(id, userId);
             return Ok();
         }
+
+        [Authorize(Roles = "Seller")]
+        [HttpPost("key")]
+        public async Task<IActionResult> AddKey(AddProductKeyDTO keyDTO)
+        {
+            if (!int.TryParse(User.Claims.First(c => c.Type == "Id").Value, out int id))
+                throw new BadRequestException("Bad ID. Logout and login.");
+
+            return Ok(await _productService.AddKey(id, keyDTO));
+        }
+
+        [Authorize(Roles = "Seller")]
+        [HttpDelete("key/{id}")]
+        public async Task<IActionResult> DeleteKey(int id)
+        {
+            if (!int.TryParse(User.Claims.First(c => c.Type == "Id").Value, out int userId))
+                throw new BadRequestException("Bad ID. Logout and login.");
+
+            await _productService.DeleteKey(userId, id);
+            return Ok();
+        }
+
     }
 }

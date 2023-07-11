@@ -1,4 +1,4 @@
-﻿using Project.DTOs;
+﻿    using Project.DTOs;
 
 namespace Project.Interfaces
 {
@@ -9,6 +9,8 @@ namespace Project.Interfaces
         Task InsertProduct(CreateProductDTO productDTO, int userId);
         Task DeleteProduct(int id, int userId);
         Task UpdateProduct(ProductDTO productDTO, int userId);
-        Task<List<ProductDTO>> GetSellerProducts(int userId);
+        Task<List<ProductSellerDTO>> GetSellerProducts(int userId);
+        Task<int> AddKey(int userId, AddProductKeyDTO keyDTO);
+        Task DeleteKey(int userId, int id);
     }
 }

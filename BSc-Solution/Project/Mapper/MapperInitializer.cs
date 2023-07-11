@@ -14,10 +14,13 @@ namespace Project.Mapper
             CreateMap<User, UserShortDTO>().ReverseMap();
 
             CreateMap<ProductDTO, Product>().ReverseMap().ForMember(x => x.Amount, y => y.MapFrom(z => z.Keys!.FindAll(x => !x.Sold).Count));
+            CreateMap<ProductSellerDTO, Product>().ReverseMap().ForMember(x => x.Amount, y => y.MapFrom(z => z.Keys!.FindAll(x => !x.Sold).Count));
             CreateMap<Product, CreateProductDTO>().ReverseMap();
 
-            CreateMap<Order, OrderDTO>().ReverseMap();
+            CreateMap<OrderDTO, Order>().ReverseMap().ForMember(x => x.Product, y => y.MapFrom(z => z.ProductKey!.Product));
+            CreateMap<Order, BuyerOrderDTO>().ReverseMap();
             CreateMap<ProductKey, ProductKeyDTO>().ReverseMap();
+            CreateMap<ProductKey, AddProductKeyDTO>().ReverseMap();
         }
     }
 }

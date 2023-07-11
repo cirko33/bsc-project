@@ -7,6 +7,6 @@ namespace Project.DTOs
         public DateTime OrderTime { get; set; }
         public double? Price { get; set; }
         public UserShortDTO? Buyer { get; set; }
-        public ProductKeyDTO? ProductKey { get; set; }
+        public ProductDTO? Product { get; set; }
     }
 }

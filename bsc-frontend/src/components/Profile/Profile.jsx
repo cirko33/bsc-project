@@ -114,7 +114,7 @@ const Profile = () => {
       />
       <img
         src={
-          data.imageFile ? URL.createObjectURL(data.imageFile) : data.image ? getImageLink(data.image) : "./default.jpg"
+          data.imageFile ? URL.createObjectURL(data.imageFile) : data.image ? getImageLink(data.image) : "default.jpg"
         }
         className="img-profile"
       />

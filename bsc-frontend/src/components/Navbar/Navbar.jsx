@@ -13,7 +13,7 @@ import {
   Tooltip,
   MenuItem,
 } from "@mui/material";
-import { getImageLink, loggedIn, logout } from "../../services/userService";
+import { getImageLink, loggedIn, logout, userInRole } from "../../services/userService";
 import UserContext from "../../store/user-context";
 
 const pages = ["Login", "Register"];
@@ -101,6 +101,11 @@ const Navbar = () => {
                       <Typography textAlign="center">{page}</Typography>
                     </MenuItem>
                   ))}
+              {loggedIn() && !userInRole("Administrator") && (
+                <MenuItem onClick={() => handleCloseNavMenu1("Orders")}>
+                  <Typography textAlign="center">Orders</Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
 
@@ -116,6 +121,11 @@ const Navbar = () => {
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
+            {loggedIn() && !userInRole("Administrator") && (
+              <MenuItem onClick={() => handleCloseNavMenu1("Orders")}>
+                <Typography textAlign="center">Orders</Typography>
+              </MenuItem>
+            )}
           </Box>
 
           {loggedIn() && (

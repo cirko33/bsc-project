@@ -5,6 +5,7 @@ using Project.DTOs;
 using Project.ExceptionMiddleware.Exceptions;
 using Project.Interfaces;
 using Project.Models;
+using System.Text.RegularExpressions;
 
 namespace Project.Services
 {
@@ -19,7 +20,7 @@ namespace Project.Services
             _mapper = mapper;
         }
 
-        public async Task<OrderDTO> GetOrder(int id, int userId)
+        public async Task<BuyerOrderDTO> GetOrder(int id, int userId)
         {
             var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Buyer)
                ?? throw new UnauthorizedException("This user doesn't exist!");
@@ -27,21 +28,33 @@ namespace Project.Services
             var order = await _unitOfWork.Orders.Get(x => x.Id == id && x.BuyerId == userId, new() { "Key.Product" })
                 ?? throw new NotFoundException("Product doesn't exist");
 
-            var orderDTO = _mapper.Map<OrderDTO>(order);
+            var orderDTO = _mapper.Map<BuyerOrderDTO>(order);
             return orderDTO;
         }
 
-        public async Task<List<OrderDTO>> GetOrders(int userId)
+        public async Task<List<BuyerOrderDTO>> GetOrders(int userId)
         {
             var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Buyer, new() { "Orders.Key.Product" })
                ?? throw new UnauthorizedException("This user doesn't exist!");
 
-            return _mapper.Map<List<OrderDTO>>(user.Orders!);
+            return _mapper.Map<List<BuyerOrderDTO>>(user.Orders!);
         }
 
         public async Task<List<OrderDTO>> GetOrders()
         {
             var orders = await _unitOfWork.Orders.GetAll();
+            return _mapper.Map<List<OrderDTO>>(orders);
+        }
+
+        public async Task<List<OrderDTO>> GetSellersOrders(int userId)
+        {
+            var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Seller, new() { "Products" })
+              ?? throw new UnauthorizedException("This user doesn't exist!");
+
+            var orders = await _unitOfWork.Orders.GetAll(null, null, new() { "ProductKey.Product", "Buyer" });
+            var ids = user.Products!.Select(x => x.Id);
+            orders = orders.FindAll(x => ids.Contains(x.ProductKey!.ProductId));
+            orders.Reverse();
             return _mapper.Map<List<OrderDTO>>(orders);
         }
 

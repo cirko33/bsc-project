@@ -5,9 +5,10 @@ namespace Project.Interfaces
 {
     public interface IOrderService
     {
-        Task<List<OrderDTO>> GetOrders(int userId);
+        Task<List<BuyerOrderDTO>> GetOrders(int userId);
         Task<List<OrderDTO>> GetOrders();
-        Task<OrderDTO> GetOrder(int id, int userId);
+        Task<List<OrderDTO>> GetSellersOrders(int userId);
+        Task<BuyerOrderDTO> GetOrder(int id, int userId);
         Task<Order> MakeOrder(int productId, int userId);
     }
 }

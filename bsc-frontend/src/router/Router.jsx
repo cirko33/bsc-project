@@ -22,6 +22,7 @@ const Router = () => {
           <Route path="/login" element={<ProtectedRoute component={<Login />} />} />
           <Route path="/register" element={<ProtectedRoute component={<Register />} />} />
           <Route path="/dashboard" element={<ProtectedRoute isLogged={true} component={<Dashboard />} />} />
+          <Route path="/home" element={<ProtectedRoute isLogged={true} component={<Dashboard />} />} />
           <Route path="/profile" element={<ProtectedRoute isLogged={true} component={<Profile />} />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
