@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Project.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project.DTOs
 {
@@ -8,5 +9,6 @@ namespace Project.DTOs
         public double? Price { get; set; }
         public UserShortDTO? Buyer { get; set; }
         public ProductDTO? Product { get; set; }
+        public OrderState State { get; set; }
     }
 }

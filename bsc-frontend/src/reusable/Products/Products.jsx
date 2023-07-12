@@ -5,6 +5,7 @@ import ProductUpdateForm from "./Forms/ProductUpdateForm";
 import ProductKeys from "./Forms/ProductKeys";
 import ProductAddForm from "./Forms/ProductAddForm";
 import { deleteProduct } from "../../services/productService";
+import ProductBuyForm from "./Forms/ProductBuyForm";
 
 const Products = ({ title, products, updateProducts }) => {
   const [data, setData] = useState({});
@@ -32,38 +33,39 @@ const Products = ({ title, products, updateProducts }) => {
             setData={setData}
             updateProducts={updateProducts}
           />
-          {/* <ProductAddForm updateProducts={updateProducts} /> */}
         </>
       )}
+      {userInRole("Buyer") && <ProductBuyForm open={open} setOpen={setOpen} data={data} />}
       <div className="card-container">
         {userInRole("Seller") && <ProductAddForm updateProducts={updateProducts} />}
-
         {products &&
           products.length > 0 &&
-          products.map((p, index) => (
-            <Card key={index} className="custom-card">
-              <CardMedia
-                component="img"
-                alt="No pic"
-                sx={{ maxHeight: "180px", width: "100%", objectFit: "cover" }}
-                src={getImageLink(p.image)}
-              />
-              <CardContent>
-                <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Seller: {p.seller.fullName}</Typography>
-                <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Name: {p.name}</Typography>
-                <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Price: {p.price.toFixed(2)}$</Typography>
-                <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Discount: {p.discount}%</Typography>
+          products
+            .toSorted((a, b) => b.amount - a.amount)
+            .map((p, index) => (
+              <Card key={index} className="custom-card">
+                <CardMedia
+                  component="img"
+                  alt="No pic"
+                  sx={{ maxHeight: "180px", width: "100%", objectFit: "cover" }}
+                  src={getImageLink(p.image)}
+                />
+                <CardContent>
+                  <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Seller: {p.seller.fullName}</Typography>
+                  <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Name: {p.name}</Typography>
+                  <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Price: {p.price.toFixed(2)}$</Typography>
+                  <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Discount: {p.discount}%</Typography>
 
-                <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>
-                  Current price: {(p.price * (1 - p.discount / 100)).toFixed(2)}$
-                </Typography>
+                  <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>
+                    Current price: {(p.price * (1 - p.discount / 100)).toFixed(2)}$
+                  </Typography>
 
-                <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Amount: {p.amount}</Typography>
-                <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Description: {p.description}</Typography>
-              </CardContent>
-              <CardActions>
+                  <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Amount: {p.amount}</Typography>
+                  <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Description: {p.description}</Typography>
+                </CardContent>
+
                 {userInRole("Seller") && (
-                  <>
+                  <CardActions>
                     <Button
                       size="small"
                       sx={{ fontWeight: "bold" }}
@@ -94,51 +96,27 @@ const Products = ({ title, products, updateProducts }) => {
                     >
                       Delete
                     </Button>
-                  </>
+                  </CardActions>
                 )}
 
-                {/* {userInRole("Buyer") && (
-                <>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      minWidth: "20px",
-                      minHeight: "20px",
-                      maxWidth: "20px",
-                      maxHeight: "20px",
-                      marginRight: "10px",
-                      marginLeft: "10px",
-                    }}
-                    onClick={() => changeValue(p.id, cart[p.id] - 1, p.amount)}
-                  >
-                    {"<"}
-                  </Button>
-                  <input
-                    className={classes.numb}
-                    pattern="[0-9]{0,4}"
-                    placeholder="0"
-                    value={cart[p.id]}
-                    onChange={(e) => changeValue(p.id, e.target.value, p.amount)}
-                  />
-                  <Button
-                    sx={{
-                      minWidth: "20px",
-                      minHeight: "20px",
-                      maxWidth: "20px",
-                      maxHeight: "20px",
-                      marginRight: "10px",
-                      marginLeft: "10px",
-                    }}
-                    variant="contained"
-                    onClick={(e) => changeValue(p.id, cart[p.id] + 1, p.amount)}
-                  >
-                    {">"}
-                  </Button>
-                </>
-              )} */}
-              </CardActions>
-            </Card>
-          ))}
+                {userInRole("Buyer") && p.amount > 0 && (
+                  <CardActions sx={{ display: "flex", justifyContent: "right" }}>
+                    <Button
+                      size="large"
+                      variant="contained"
+                      sx={{ fontWeight: "bold" }}
+                      color="success"
+                      onClick={() => {
+                        setData(p);
+                        setOpen(true);
+                      }}
+                    >
+                      Buy
+                    </Button>
+                  </CardActions>
+                )}
+              </Card>
+            ))}
       </div>
     </div>
   );

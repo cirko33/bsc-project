@@ -26,29 +26,22 @@ namespace Project.Controllers
                 throw new BadRequestException("Bad ID. Logout and login.");
 
             string red = await _paymentService.CreatePayPalPayment(id, userId);
-            return Redirect(red);
+            return Ok(red);
         }
 
-        [Authorize(Roles = "Buyer")]
         [HttpGet("paypal/success/{id}")]
-        public async Task<IActionResult> ConfirmPayPalPayment(int id, string paymentID, string token, string PayerID)
+        public async Task<IActionResult> ConfirmPayPalPayment(int id, string paymentId, string token, string PayerID)
         {
-            if (!int.TryParse(User.Claims.First(c => c.Type == "Id").Value, out int userId))
-                throw new BadRequestException("Bad ID. Logout and login.");
-
-            var result = await _paymentService.SuccessPayPalPayment(paymentID, PayerID, id, userId);
-            return Ok(result);
+            var result = await _paymentService.SuccessPayPalPayment(paymentId, PayerID, id);
+            return Redirect("http://localhost:5173");
         }
 
-        [Authorize(Roles = "Buyer")]
         [HttpGet("paypal/cancel/{id}")]
         public async Task<IActionResult> CancelPayPalPayment(int id)
         {
-            if (!int.TryParse(User.Claims.First(c => c.Type == "Id").Value, out int userId))
-                throw new BadRequestException("Bad ID. Logout and login.");
 
-            string red = await _paymentService.CreatePayPalPayment(id, userId);
-            return Redirect(red);
+            await _paymentService.CancelPayPalPayment(id);
+            return Redirect("http://localhost:5173");
         }
     }
 }

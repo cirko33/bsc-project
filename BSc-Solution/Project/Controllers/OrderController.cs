@@ -36,5 +36,16 @@ namespace Project.Controllers
             var orders = await _orderService.GetSellersOrders(id);
             return Ok(orders);
         }
+
+        [Authorize(Roles = "Buyer")]
+        [HttpGet("buyer")]
+        public async Task<IActionResult> GetBuyersOrders()
+        {
+            if (!int.TryParse(User.Claims.First(c => c.Type == "Id").Value, out int id))
+                throw new BadRequestException("Bad ID. Logout and login.");
+
+            var orders = await _orderService.GetBuyerOrders(id);
+            return Ok(orders);
+        }
     }
 }

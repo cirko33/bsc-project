@@ -13,11 +13,21 @@ namespace Project.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHelperService _helperService;
 
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IHelperService helperService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _helperService = helperService;
+        }
+
+        public async Task<List<BuyerOrderDTO>> GetBuyerOrders(int userId)
+        {
+            var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Buyer, new() { "Orders.ProductKey.Product.Seller" })
+                ?? throw new UnauthorizedException("This user doesn't exist!");
+
+            return _mapper.Map<List<BuyerOrderDTO>>(user.Orders!); ;
         }
 
         public async Task<BuyerOrderDTO> GetOrder(int id, int userId)
@@ -60,7 +70,7 @@ namespace Project.Services
 
         public async Task<Order> MakeOrder(int productId, int userId)
         {
-            var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Buyer, new() { "Orders.Key.Product" })
+            var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Buyer)
                 ?? throw new UnauthorizedException("This user doesn't exist!");
 
             var product = await _unitOfWork.Products.Get(x => x.Id == productId, new() { "Keys" })
@@ -81,6 +91,21 @@ namespace Project.Services
             _unitOfWork.Keys.Update(key);
             await _unitOfWork.Orders.Insert(order);
             await _unitOfWork.Save();
+
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(300000);
+                var ord = await _unitOfWork.Orders.Get(x => x.Id == order!.Id, new() { "ProductKey" });
+                if (ord != null)
+                    if (order.State != OrderState.Confirmed)
+                    {
+                        order.State = OrderState.Cancelled;
+                        order.ProductKey!.Sold = false;
+                        _unitOfWork.Orders.Update(order);
+                        await _unitOfWork.Save();
+                        await _helperService.SendEmail("Order cancelled", $"Your order was cancelled due 5min expiration.", user.Email!);
+                    }
+            });
             return order;
         }
     }

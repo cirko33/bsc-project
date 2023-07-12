@@ -11,6 +11,16 @@ export const getOrders = async () => {
   }
 };
 
+export const getBuyerOrders = async () => {
+  try {
+    const res = await api.get("/order/buyer");
+    return res.data;
+  } catch (e) {
+    throwWarning(e);
+    return Promise.reject(e);
+  }
+};
+
 export const getSellerOrders = async () => {
   try {
     const res = await api.get("/order/seller");

@@ -69,12 +69,9 @@ namespace Project.Services
             return approval.href;
         }
 
-        public async Task CancelPayPalPayment(int orderId, int userId)
+        public async Task CancelPayPalPayment(int orderId)
         {
-            var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Buyer)
-                ?? throw new UnauthorizedException("User isn't buyer");
-
-            var order = await _unitOfWork.Orders.Get(x => x.Id == orderId && x.BuyerId == userId, new() { "ProductKey.Product" })
+            var order = await _unitOfWork.Orders.Get(x => x.Id == orderId, new() { "ProductKey.Product" })
                 ?? throw new NotFoundException("No order");
 
             order.ProductKey!.Sold = false;
@@ -83,12 +80,10 @@ namespace Project.Services
             await _unitOfWork.Save();
         }
 
-        public async Task<Payment> SuccessPayPalPayment(string paymentId, string payerId, int orderId, int userId)
+        public async Task<Payment> SuccessPayPalPayment(string paymentId, string payerId, int orderId)
         {
-            var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Buyer)
-                ?? throw new UnauthorizedException("User isn't buyer");
 
-            var order = await _unitOfWork.Orders.Get(x => x.Id == orderId && x.BuyerId == userId, new() { "ProductKey.Product" })
+            var order = await _unitOfWork.Orders.Get(x => x.Id == orderId, new() { "ProductKey.Product", "Buyer" })
                 ?? throw new NotFoundException("No order");
 
             var _config = ConfigManager.Instance.GetProperties();
@@ -106,7 +101,7 @@ namespace Project.Services
             order.State = OrderState.Confirmed;
             _unitOfWork.Orders.Update(order);
             await _unitOfWork.Save();
-            _ = Task.Run(() => _helperService.SendEmail($"Your key for {order.ProductKey!.Product!.Name}", $"KEY: {order.ProductKey.Key}", user.Email!));
+            _ = Task.Run(() => _helperService.SendEmail($"Your key for {order.ProductKey!.Product!.Name}", $"KEY: {order.ProductKey.Key}", order.Buyer!.Email!));
             return executedPayment;
         }
     }

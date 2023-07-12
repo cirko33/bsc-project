@@ -1,8 +1,13 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import { Button, Card, CardContent, Typography } from "@mui/material";
 import { dateTimeToString } from "../../helpers/helpers";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { userInRole } from "../../services/userService";
+import OrderDialog from "./OrderDialog";
 
 const Orders = ({ orders, updateOrders }) => {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState({});
+
   useEffect(() => {
     setInterval(() => {
       updateOrders();
@@ -12,6 +17,7 @@ const Orders = ({ orders, updateOrders }) => {
 
   return (
     <>
+      <OrderDialog open={open} setOpen={setOpen} data={data} />
       <Typography
         variant="h4"
         component="div"
@@ -26,8 +32,18 @@ const Orders = ({ orders, updateOrders }) => {
             <CardContent>
               <Typography>Ordered: {dateTimeToString(o.orderTime)}</Typography>
               <Typography>Price: {o.price.toFixed(2)}$</Typography>
-              <Typography>Buyer: {o.buyer.fullName}</Typography>
+              {!userInRole("Buyer") && <Typography>Buyer: {o.buyer.fullName}</Typography>}
               <Typography>Product: {o.product.name}</Typography>
+              {userInRole("Buyer") && o.state === 1 && (
+                <Button
+                  onClick={() => {
+                    setData(o);
+                    setOpen(true);
+                  }}
+                >
+                  Details
+                </Button>
+              )}
             </CardContent>
           </Card>
         ))}

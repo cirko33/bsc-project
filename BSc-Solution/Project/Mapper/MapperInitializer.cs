@@ -18,7 +18,9 @@ namespace Project.Mapper
             CreateMap<Product, CreateProductDTO>().ReverseMap();
 
             CreateMap<OrderDTO, Order>().ReverseMap().ForMember(x => x.Product, y => y.MapFrom(z => z.ProductKey!.Product));
-            CreateMap<Order, BuyerOrderDTO>().ReverseMap();
+            CreateMap<BuyerOrderDTO, Order>().ReverseMap()
+                .ForMember(x => x.Product, y => y.MapFrom(z => z.ProductKey!.Product))
+                .ForMember(x => x.ProductKey, y => y.MapFrom(z => z.State == OrderState.Confirmed ? z.ProductKey : null));
             CreateMap<ProductKey, ProductKeyDTO>().ReverseMap();
             CreateMap<ProductKey, AddProductKeyDTO>().ReverseMap();
         }
