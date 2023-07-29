@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import { tableColumns } from "../../../helpers/renderHelpers";
-import { deleteBlock } from "../../../services/userService";
 
 const OrderTable = ({ orders, updateOrders }) => {
   return (
@@ -23,7 +22,9 @@ const OrderTable = ({ orders, updateOrders }) => {
           <TableRow>
             {orders &&
               orders.length > 0 &&
-              Object.keys(orders[0]).map((key, index) => <TableCell key={index}>{key}</TableCell>)}
+              Object.keys(orders[0]).map((key, index) => (
+                <TableCell key={index}>{key}</TableCell>
+              ))}
           </TableRow>
         </TableHead>
         <TableBody>

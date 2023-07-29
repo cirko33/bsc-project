@@ -103,7 +103,7 @@ namespace Project.Services
                         order.ProductKey!.Sold = false;
                         _unitOfWork.Orders.Update(order);
                         await _unitOfWork.Save();
-                        await _helperService.SendEmail("Order cancelled", $"Your order was cancelled due 5min expiration.", user.Email!);
+                        await _helperService.SendEmail("Order cancelled", $"Your order was cancelled due 5  min expiration.", user.Email!);
                     }
             });
             return order;

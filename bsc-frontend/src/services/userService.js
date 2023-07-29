@@ -10,7 +10,9 @@ export const getToken = () => {
 export const register = async (data) => {
   try {
     const formData = toFormData(data);
-    await api.post("/user/register", formData, { headers: { "Content-Type": "multipart/form-data" } });
+    await api.post("/user/register", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   } catch (e) {
     throwWarning(e);
     return Promise.reject(e);
@@ -44,7 +46,9 @@ export const getUser = async () => {
 export const putUser = async (data) => {
   try {
     const formData = toFormData(data);
-    const res = await api.put("/user", formData, { headers: { "Content-Type": "multipart/form-data" } });
+    const res = await api.put("/user", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return res.data;
   } catch (e) {
     throwWarning(e);
@@ -57,7 +61,11 @@ export const userInRole = (role) => {
     const token = getToken();
     if (!token) return null;
     const tokenDecoded = jwtDecode(token);
-    return tokenDecoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] === role;
+    return (
+      tokenDecoded[
+        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+      ] === role
+    );
   } catch (e) {
     console.log(e);
   }
@@ -68,7 +76,7 @@ export const loggedIn = () => {
 };
 
 export const getImageLink = (imageName) => {
-  if (imageName) return import.meta.env.VITE_LINK + "/user/image/" + imageName;
+  if (imageName) return process.env.REACT_APP_LINK + "/user/image/" + imageName;
   return "default.jpg";
 };
 

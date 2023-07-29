@@ -22,6 +22,11 @@ namespace Project.Services
             _configuration = configuration;
         }
 
+        public double GetPrice(Product product)
+        {
+            return product.Price - (product.Price * product.Discount / 100);
+        }
+
         public string GetToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));

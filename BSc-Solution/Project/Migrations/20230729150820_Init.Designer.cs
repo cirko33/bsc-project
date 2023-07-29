@@ -12,8 +12,8 @@ using Project.Models.StoreDbContext;
 namespace Project.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20230709225535_Changed")]
-    partial class Changed
+    [Migration("20230729150820_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,9 @@ namespace Project.Migrations
 
                     b.Property<int>("State")
                         .HasColumnType("int");
+
+                    b.Property<string>("UniqueHash")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -153,6 +156,9 @@ namespace Project.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("EthereumAddress")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -186,12 +192,12 @@ namespace Project.Migrations
                         {
                             Id = 1,
                             Address = "No address",
-                            Birthday = new DateTime(1998, 7, 10, 0, 55, 34, 296, DateTimeKind.Local).AddTicks(1736),
+                            Birthday = new DateTime(1998, 7, 29, 17, 8, 20, 47, DateTimeKind.Local).AddTicks(9768),
                             Blocked = false,
                             Email = "admin@gmail.com",
                             FullName = "admin",
                             IsDeleted = false,
-                            Password = "$2a$11$Sq0VBtf/1MQLoNLfUWuT1uR.VHqH6dapJdGSfF6bVxEizvYtCoDzy",
+                            Password = "$2a$11$SmoKd4l4pH9VydkoJQCYHe/Ykz1N0kVrgYVame1YkTxP3IsRBIY4O",
                             Type = 0,
                             Username = "admin"
                         },
@@ -199,12 +205,12 @@ namespace Project.Migrations
                         {
                             Id = 2,
                             Address = "No address",
-                            Birthday = new DateTime(1998, 7, 10, 0, 55, 34, 464, DateTimeKind.Local).AddTicks(8681),
+                            Birthday = new DateTime(1998, 7, 29, 17, 8, 20, 150, DateTimeKind.Local).AddTicks(2043),
                             Blocked = false,
                             Email = "seller@gmail.com",
                             FullName = "seller",
                             IsDeleted = false,
-                            Password = "$2a$11$8DWzW22AWvShlwTq.JaDd.mmtH69USn7pIq7Vgb4K.PxkdbVcaSSe",
+                            Password = "$2a$11$K5LCITg3X6KHqxAI2qFIiOEgHlMhis.tUmI9mfUk8ipJLq8PWfLDe",
                             Type = 1,
                             Username = "seller"
                         },
@@ -212,12 +218,12 @@ namespace Project.Migrations
                         {
                             Id = 3,
                             Address = "No address",
-                            Birthday = new DateTime(1998, 7, 10, 0, 55, 34, 619, DateTimeKind.Local).AddTicks(1615),
+                            Birthday = new DateTime(1998, 7, 29, 17, 8, 20, 252, DateTimeKind.Local).AddTicks(7071),
                             Blocked = false,
                             Email = "buyer@gmail.com",
                             FullName = "buyer",
                             IsDeleted = false,
-                            Password = "$2a$11$U2ohIZ2lpBz3CE2Czjg.2eQGaGZFe3EXNzXMj8gKgjTxS.uCMzmQe",
+                            Password = "$2a$11$pypAO5rOWzgr4hbEU654f.7blobfdgRw22DzIhee9VtDNhjwM/DVa",
                             Type = 2,
                             Username = "buyer"
                         });

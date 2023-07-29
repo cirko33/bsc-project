@@ -20,5 +20,6 @@ namespace Project.DTOs
         public string? Address { get; set; }
         public string? Image { get; set; }
         public IFormFile? ImageFile { get; set; }
+        public string? EthereumAddress { get; set; }
     }
 }

@@ -27,6 +27,7 @@ namespace Project.Migrations
                     Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EthereumAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Blocked = table.Column<bool>(type: "bit", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -68,7 +69,7 @@ namespace Project.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Key = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Sold = table.Column<bool>(type: "bit", nullable: true),
+                    Sold = table.Column<bool>(type: "bit", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -91,7 +92,9 @@ namespace Project.Migrations
                     OrderTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BuyerId = table.Column<int>(type: "int", nullable: false),
                     ProductKeyId = table.Column<int>(type: "int", nullable: false),
+                    UniqueHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<double>(type: "float", nullable: false),
+                    State = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -112,12 +115,12 @@ namespace Project.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Address", "Birthday", "Blocked", "Email", "FullName", "Image", "IsDeleted", "Password", "Type", "Username" },
+                columns: new[] { "Id", "Address", "Birthday", "Blocked", "Email", "EthereumAddress", "FullName", "Image", "IsDeleted", "Password", "Type", "Username" },
                 values: new object[,]
                 {
-                    { 1, "No address", new DateTime(1998, 6, 27, 19, 35, 58, 415, DateTimeKind.Local).AddTicks(2518), false, "admin@gmail.com", "admin", null, false, "$2a$11$bIS/LQcUBWSdQOlFUw0.yOlTwrPhyVNey8fmSQUyLQfFGn8BoetV.", 0, "admin" },
-                    { 2, "No address", new DateTime(1998, 6, 27, 19, 35, 58, 601, DateTimeKind.Local).AddTicks(7072), false, "seller@gmail.com", "seller", null, false, "$2a$11$HzkxRiY4Coxc.HeA7s5/3ONKb6IYFwWs0FdpQ0KJd2kR/Lf6kvXlK", 1, "seller" },
-                    { 3, "No address", new DateTime(1998, 6, 27, 19, 35, 58, 774, DateTimeKind.Local).AddTicks(3095), false, "buyer@gmail.com", "buyer", null, false, "$2a$11$Xf06iF76XGK6RNIlpmK15O62v8T71DTFyBiqn0QPJifP2XdpOZ1Dy", 2, "buyer" }
+                    { 1, "No address", new DateTime(1998, 7, 29, 17, 8, 20, 47, DateTimeKind.Local).AddTicks(9768), false, "admin@gmail.com", null, "admin", null, false, "$2a$11$SmoKd4l4pH9VydkoJQCYHe/Ykz1N0kVrgYVame1YkTxP3IsRBIY4O", 0, "admin" },
+                    { 2, "No address", new DateTime(1998, 7, 29, 17, 8, 20, 150, DateTimeKind.Local).AddTicks(2043), false, "seller@gmail.com", null, "seller", null, false, "$2a$11$K5LCITg3X6KHqxAI2qFIiOEgHlMhis.tUmI9mfUk8ipJLq8PWfLDe", 1, "seller" },
+                    { 3, "No address", new DateTime(1998, 7, 29, 17, 8, 20, 252, DateTimeKind.Local).AddTicks(7071), false, "buyer@gmail.com", null, "buyer", null, false, "$2a$11$pypAO5rOWzgr4hbEU654f.7blobfdgRw22DzIhee9VtDNhjwM/DVa", 2, "buyer" }
                 });
 
             migrationBuilder.CreateIndex(
