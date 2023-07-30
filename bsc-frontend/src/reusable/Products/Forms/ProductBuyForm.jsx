@@ -1,19 +1,14 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
-} from "@mui/material";
-import {
-  createEthereumPayment,
-  createPayPalPayment,
-} from "../../../services/paymentService";
+import { Button, Dialog, DialogActions, DialogContent, Typography } from "@mui/material";
+import { createEthereumPayment, createPayPalPayment } from "../../../services/paymentService";
 import { getImageLink } from "../../../services/userService";
+import { useContext } from "react";
+import UserContext from "../../../store/user-context";
+import { useNavigate } from "react-router-dom";
 
 const ProductBuyForm = ({ open, setOpen, data }) => {
   const handleClose = () => setOpen(false);
+  const { setLoadingPayment } = useContext(UserContext);
+  const navigate = useNavigate();
 
   return (
     <Dialog
@@ -38,23 +33,21 @@ const ProductBuyForm = ({ open, setOpen, data }) => {
             }
             className="dialog-image"
           />
+          <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Seller: {data.seller.fullName}</Typography>
+          <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Name: {data.name}</Typography>
           <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>
-            Seller: {data.seller.fullName}
+            Current price: {(data.price * (1 - data.discount / 100)).toFixed(2)}$
           </Typography>
-          <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>
-            Name: {data.name}
-          </Typography>
-          <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>
-            Current price: {(data.price * (1 - data.discount / 100)).toFixed(2)}
-            $
-          </Typography>
-          <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>
-            Description: {data.description}
-          </Typography>
+          <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Description: {data.description}</Typography>
           <Typography variant="h5">Pay with:</Typography>
           <hr />
           <Button
-            onClick={() => createPayPalPayment(data.id)}
+            onClick={async () => {
+              setLoadingPayment(true);
+              await createPayPalPayment(data.id);
+              setLoadingPayment(false);
+              navigate("/");
+            }}
             sx={{ background: "yellow", minHeight: "20px" }}
             variant="contained"
           >

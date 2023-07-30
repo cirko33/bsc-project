@@ -65,6 +65,9 @@ namespace Project.Services
                 }));
 
                 string name = DateTime.Now.Ticks.ToString() + Path.GetExtension(image.FileName);
+                if (!Directory.Exists("Resources"))
+                    Directory.CreateDirectory("Resources");
+
                 img.Save(Path.Combine("Resources", name));
                 return name;
             }

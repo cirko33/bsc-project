@@ -161,9 +161,17 @@ namespace Project.Services
             var order = await _unitOfWork.Orders.Get(x => x.UniqueHash == block.Input, new() { "ProductKey.Product.Seller", "Buyer" })
                 ?? throw new NotFoundException("You made wrong transaction.");
 
-
-            if (!order.ProductKey!.Product!.Seller!.EthereumAddress!.ToLower().Contains(block.To.ToLower()))
-                throw new BadRequestException("You made wrong transaction.");
+            var sellerAddress = order.ProductKey!.Product!.Seller!.EthereumAddress!;
+            if(string.IsNullOrWhiteSpace(sellerAddress))
+            {
+                if(!_configuration["Ethereum:Address"]!.ToLower().Contains(block.To.ToLower()))
+                    throw new BadRequestException("You made wrong transaction.");
+            }
+            else
+            {
+                if (!sellerAddress.ToLower().Contains(block.To.ToLower()))
+                    throw new BadRequestException("You made wrong transaction.");
+            }
 
             decimal price = await GetPriceInEth((double)order.Price!);
             if (UnitConversion.Convert.ToWei(price) > block.Value.Value)
