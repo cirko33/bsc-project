@@ -1,14 +1,4 @@
-import {
-  Button,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { tableColumns } from "../../../helpers/renderHelpers";
 
 const OrderTable = ({ orders, updateOrders }) => {
@@ -22,9 +12,7 @@ const OrderTable = ({ orders, updateOrders }) => {
           <TableRow>
             {orders &&
               orders.length > 0 &&
-              Object.keys(orders[0]).map((key, index) => (
-                <TableCell key={index}>{key}</TableCell>
-              ))}
+              Object.keys(orders[0]).map((key, index) => <TableCell key={index}>{key}</TableCell>)}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -35,11 +23,6 @@ const OrderTable = ({ orders, updateOrders }) => {
                 {Object.keys(order).map((key, index) => (
                   <TableCell key={index}>{tableColumns(key, order)}</TableCell>
                 ))}
-                <TableCell>
-                  <Button variant="outlined" color="info">
-                    Info
-                  </Button>
-                </TableCell>
               </TableRow>
             ))}
         </TableBody>

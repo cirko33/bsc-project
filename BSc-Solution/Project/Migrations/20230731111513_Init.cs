@@ -118,10 +118,15 @@ namespace Project.Migrations
                 columns: new[] { "Id", "Address", "Birthday", "Blocked", "Email", "EthereumAddress", "FullName", "Image", "IsDeleted", "Password", "Type", "Username" },
                 values: new object[,]
                 {
-                    { 1, "No address", new DateTime(1998, 7, 29, 17, 8, 20, 47, DateTimeKind.Local).AddTicks(9768), false, "admin@gmail.com", null, "admin", null, false, "$2a$11$SmoKd4l4pH9VydkoJQCYHe/Ykz1N0kVrgYVame1YkTxP3IsRBIY4O", 0, "admin" },
-                    { 2, "No address", new DateTime(1998, 7, 29, 17, 8, 20, 150, DateTimeKind.Local).AddTicks(2043), false, "seller@gmail.com", null, "seller", null, false, "$2a$11$K5LCITg3X6KHqxAI2qFIiOEgHlMhis.tUmI9mfUk8ipJLq8PWfLDe", 1, "seller" },
-                    { 3, "No address", new DateTime(1998, 7, 29, 17, 8, 20, 252, DateTimeKind.Local).AddTicks(7071), false, "buyer@gmail.com", null, "buyer", null, false, "$2a$11$pypAO5rOWzgr4hbEU654f.7blobfdgRw22DzIhee9VtDNhjwM/DVa", 2, "buyer" }
+                    { 1, "No address", new DateTime(1998, 7, 31, 13, 15, 13, 330, DateTimeKind.Local).AddTicks(6714), false, "admin@gmail.com", null, "admin", null, false, "$2a$11$Ii0jDfvImY03jq2koGwyrOVwvhf3bWY3asGV91MNaJaj0RZ7i6FhS", 0, "admin" },
+                    { 2, "No address", new DateTime(1998, 7, 31, 13, 15, 13, 435, DateTimeKind.Local).AddTicks(2425), false, "seller@gmail.com", null, "seller", null, false, "$2a$11$GoplLeVEfMupxpmor1xG5uD2v4mQqyaqeU8w262ZC4qggMWYj33Qu", 1, "seller" },
+                    { 3, "No address", new DateTime(1998, 7, 31, 13, 15, 13, 539, DateTimeKind.Local).AddTicks(9547), false, "buyer@gmail.com", null, "buyer", null, false, "$2a$11$7905B8ZeQCuLcNA1ooQfpuLIsreRhF8PABBcNOXRu0W//hNaJnYP.", 2, "buyer" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "Description", "Discount", "Image", "IsDeleted", "Name", "Price", "SellerId" },
+                values: new object[] { 1, "Fast", 85, null, false, "Windows 10", 100.0, 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Keys_ProductId",

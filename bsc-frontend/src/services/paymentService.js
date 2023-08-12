@@ -46,7 +46,7 @@ export const createEthereumPayment = async (id) => {
       window.location.reload();
     }, 2000);
   } catch (e) {
-    toast.error("Something went wrong, try again or different way");
-    return Promise.reject(e);
+    console.log(e);
+    toast.error("Please connect to MetaMask and try again");
   }
 };

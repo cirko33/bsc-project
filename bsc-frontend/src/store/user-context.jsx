@@ -6,7 +6,6 @@ const UserContext = createContext();
 // eslint-disable-next-line react/prop-types
 export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loadingPayment, setLoadingPayment] = useState(false);
 
   useEffect(() => {
     updateUser();
@@ -25,8 +24,6 @@ export const UserContextProvider = ({ children }) => {
       value={{
         user,
         updateUser,
-        loadingPayment,
-        setLoadingPayment,
       }}
     >
       {children}

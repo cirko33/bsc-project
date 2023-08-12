@@ -1,14 +1,13 @@
+import { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, Typography } from "@mui/material";
 import { createEthereumPayment, createPayPalPayment } from "../../../services/paymentService";
 import { getImageLink } from "../../../services/userService";
-import { useContext } from "react";
-import UserContext from "../../../store/user-context";
 import { useNavigate } from "react-router-dom";
 
 const ProductBuyForm = ({ open, setOpen, data }) => {
   const handleClose = () => setOpen(false);
-  const { setLoadingPayment } = useContext(UserContext);
   const navigate = useNavigate();
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   return (
     <Dialog
@@ -41,26 +40,37 @@ const ProductBuyForm = ({ open, setOpen, data }) => {
           <Typography sx={{ fontSize: 14, flexWrap: "wrap" }}>Description: {data.description}</Typography>
           <Typography variant="h5">Pay with:</Typography>
           <hr />
-          <Button
-            onClick={async () => {
-              setLoadingPayment(true);
-              await createPayPalPayment(data.id);
-              setLoadingPayment(false);
-              navigate("/");
-            }}
-            sx={{ background: "yellow", minHeight: "20px" }}
-            variant="contained"
-          >
-            <img src="paypal.png" alt="paypal" style={{ width: "100px" }} />
-          </Button>
-          <Button
-            onClick={() => createEthereumPayment(data.id)}
-            color="info"
-            variant="contained"
-            sx={{ minHeight: "45px", marginLeft: "10px" }}
-          >
-            <img src="metamask.png" alt="metamask" style={{ width: "100px" }} />
-          </Button>
+          {paymentLoading ? (
+            <>
+              <div className="loading-spinner" style={{ width: "50px", height: "50px" }}></div>
+              <Typography>Payment in progress...</Typography>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={() => {
+                  createPayPalPayment(data.id);
+                }}
+                sx={{ background: "yellow", minHeight: "20px" }}
+                variant="contained"
+              >
+                <img src="paypal.png" alt="paypal" style={{ width: "100px" }} />
+              </Button>
+              <Button
+                onClick={async () => {
+                  setPaymentLoading(true);
+                  await createEthereumPayment(data.id);
+                  setPaymentLoading(false);
+                  setTimeout(() => navigate("/"), 5000);
+                }}
+                color="info"
+                variant="contained"
+                sx={{ minHeight: "45px", marginLeft: "10px" }}
+              >
+                <img src="metamask.png" alt="metamask" style={{ width: "100px" }} />
+              </Button>
+            </>
+          )}
         </DialogContent>
       )}
 

@@ -45,6 +45,7 @@ namespace Project.Services
             dbUser.Email = user.Email;
             dbUser.Birthday = user.Birthday;
             dbUser.FullName = user.FullName;
+            dbUser.EthereumAddress = user.EthereumAddress;
 
             if (dbUser.Username != user.Username)
                 if ((await _unitOfWork.Users.Get(x => x.Username == user.Username)) != null)

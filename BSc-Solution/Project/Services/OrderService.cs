@@ -27,6 +27,7 @@ namespace Project.Services
             var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Buyer, new() { "Orders.ProductKey.Product.Seller" })
                 ?? throw new UnauthorizedException("This user doesn't exist!");
 
+            user.Orders!.Reverse();
             return _mapper.Map<List<BuyerOrderDTO>>(user.Orders!); ;
         }
 
@@ -52,7 +53,8 @@ namespace Project.Services
 
         public async Task<List<OrderDTO>> GetOrders()
         {
-            var orders = await _unitOfWork.Orders.GetAll();
+            var orders = await _unitOfWork.Orders.GetAll(null, null, new() { "ProductKey.Product", "Buyer"});
+            orders.Reverse();
             return _mapper.Map<List<OrderDTO>>(orders);
         }
 

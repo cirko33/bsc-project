@@ -99,6 +99,18 @@ namespace Project.Migrations
                     b.HasIndex("SellerId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Fast",
+                            Discount = 85,
+                            IsDeleted = false,
+                            Name = "Windows 10",
+                            Price = 100.0,
+                            SellerId = 2
+                        });
                 });
 
             modelBuilder.Entity("Project.Models.ProductKey", b =>
@@ -189,12 +201,12 @@ namespace Project.Migrations
                         {
                             Id = 1,
                             Address = "No address",
-                            Birthday = new DateTime(1998, 7, 29, 17, 8, 20, 47, DateTimeKind.Local).AddTicks(9768),
+                            Birthday = new DateTime(1998, 7, 31, 13, 15, 13, 330, DateTimeKind.Local).AddTicks(6714),
                             Blocked = false,
                             Email = "admin@gmail.com",
                             FullName = "admin",
                             IsDeleted = false,
-                            Password = "$2a$11$SmoKd4l4pH9VydkoJQCYHe/Ykz1N0kVrgYVame1YkTxP3IsRBIY4O",
+                            Password = "$2a$11$Ii0jDfvImY03jq2koGwyrOVwvhf3bWY3asGV91MNaJaj0RZ7i6FhS",
                             Type = 0,
                             Username = "admin"
                         },
@@ -202,12 +214,12 @@ namespace Project.Migrations
                         {
                             Id = 2,
                             Address = "No address",
-                            Birthday = new DateTime(1998, 7, 29, 17, 8, 20, 150, DateTimeKind.Local).AddTicks(2043),
+                            Birthday = new DateTime(1998, 7, 31, 13, 15, 13, 435, DateTimeKind.Local).AddTicks(2425),
                             Blocked = false,
                             Email = "seller@gmail.com",
                             FullName = "seller",
                             IsDeleted = false,
-                            Password = "$2a$11$K5LCITg3X6KHqxAI2qFIiOEgHlMhis.tUmI9mfUk8ipJLq8PWfLDe",
+                            Password = "$2a$11$GoplLeVEfMupxpmor1xG5uD2v4mQqyaqeU8w262ZC4qggMWYj33Qu",
                             Type = 1,
                             Username = "seller"
                         },
@@ -215,12 +227,12 @@ namespace Project.Migrations
                         {
                             Id = 3,
                             Address = "No address",
-                            Birthday = new DateTime(1998, 7, 29, 17, 8, 20, 252, DateTimeKind.Local).AddTicks(7071),
+                            Birthday = new DateTime(1998, 7, 31, 13, 15, 13, 539, DateTimeKind.Local).AddTicks(9547),
                             Blocked = false,
                             Email = "buyer@gmail.com",
                             FullName = "buyer",
                             IsDeleted = false,
-                            Password = "$2a$11$pypAO5rOWzgr4hbEU654f.7blobfdgRw22DzIhee9VtDNhjwM/DVa",
+                            Password = "$2a$11$7905B8ZeQCuLcNA1ooQfpuLIsreRhF8PABBcNOXRu0W//hNaJnYP.",
                             Type = 2,
                             Username = "buyer"
                         });
