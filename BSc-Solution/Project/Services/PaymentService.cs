@@ -182,10 +182,5 @@ namespace Project.Services
             await _unitOfWork.Save();
             _ = Task.Run(() => _helperService.SendEmail($"Thank you for your purchase! Your key for {order.ProductKey!.Product!.Name}", $"KEY: {order.ProductKey.Key}", order.Buyer!.Email!));
         }
-
-        public Task<string> SuccessEthereumPayment(int orderId, int userId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

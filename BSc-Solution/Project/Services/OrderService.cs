@@ -67,6 +67,7 @@ namespace Project.Services
             var ids = user.Products!.Select(x => x.Id);
             orders = orders.FindAll(x => ids.Contains(x.ProductKey!.ProductId));
             orders.Reverse();
+            orders.RemoveAll(x => x.State != OrderState.Confirmed);
             return _mapper.Map<List<OrderDTO>>(orders);
         }
 

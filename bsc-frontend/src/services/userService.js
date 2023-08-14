@@ -19,6 +19,16 @@ export const register = async (data) => {
   }
 };
 
+export const googleLogin = async (data) => {
+  try {
+    const res = await api.post("/user/google-sign-in", { token: data.credential });
+    if (!res) return;
+    localStorage.setItem("token", res.data);
+  } catch (e) {
+    alert(e.response.data.Exception);
+  }
+};
+
 export const login = async (data) => {
   try {
     const res = await api.post("/user/login", data);
@@ -61,11 +71,7 @@ export const userInRole = (role) => {
     const token = getToken();
     if (!token) return null;
     const tokenDecoded = jwtDecode(token);
-    return (
-      tokenDecoded[
-        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-      ] === role
-    );
+    return tokenDecoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] === role;
   } catch (e) {
     console.log(e);
   }
