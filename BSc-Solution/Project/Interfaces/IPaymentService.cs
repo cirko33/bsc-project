@@ -12,6 +12,7 @@ namespace Project.Interfaces
         Task<Payment> SuccessPayPalPayment(string paymentId, string payerId, int orderId);
         Task CancelPayPalPayment(int orderId);
         Task<EthereumPaymentDTO> CreateEthereumPayment(int productId, int userId);
+        Task CancelEthereumPayment(int orderId);
         Task CheckEthereumPayment(string transactionHash);
     }
 }

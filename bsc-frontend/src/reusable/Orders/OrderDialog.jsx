@@ -17,7 +17,7 @@ const OrderDialog = ({ open, setOpen, data }) => {
       <DialogContent>
         <img
           alt="Pic"
-          src={data && data.product && data.product.image ? getImageLink(data.image) : "default.jpg"}
+          src={data && data.product && data.product.image ? getImageLink(data.product.image) : "default.jpg"}
           className="dialog-image"
         />
         {data && data.product && (

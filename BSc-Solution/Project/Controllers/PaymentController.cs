@@ -66,5 +66,13 @@ namespace Project.Controllers
             await _paymentService.CheckEthereumPayment(hash);
             return Ok();
         }
+
+        [Authorize]
+        [HttpGet("ethereum/cancel/{id}")]
+        public async Task<IActionResult> CheckEthereumPayment(int id)
+        {
+            await _paymentService.CancelEthereumPayment(id);
+            return Ok();
+        }
     }
 }

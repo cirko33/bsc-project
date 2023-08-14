@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Google.Apis.Auth;
 using MailKit;
+using Microsoft.EntityFrameworkCore;
 using Project.DTOs;
 using Project.ExceptionMiddleware.Exceptions;
 using Project.Interfaces;
@@ -129,6 +130,11 @@ namespace Project.Services
             registerDTO.Password = BC.BCrypt.HashPassword(registerDTO.Password);
 
             var user = _mapper.Map<User>(registerDTO);
+
+            if (registerDTO.ImageFile != null)
+            {
+                user.Image = _helperService.SaveImage(registerDTO.ImageFile);
+            }
 
             _ = Task.Run(() => _helperService.SendEmail("Registration to OnlineShop", 
                 $"Thank you for registring to OnlineShop! You can {(user.Type == UserType.Seller ? "Sell" : "Buy")} products!", 

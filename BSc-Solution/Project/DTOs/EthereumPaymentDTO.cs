@@ -7,5 +7,6 @@ namespace Project.DTOs
         public string? To { get; set; }
         public string? Value { get; set; }
         public string? Input { get; set; }
+        public int? OrderId { get; set; }
     }
 }

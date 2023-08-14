@@ -14,6 +14,7 @@ export const createPayPalPayment = async (id) => {
 };
 
 export const createEthereumPayment = async (id) => {
+  let orderId = -1;
   try {
     if (!window.ethereum || window.ethereum === undefined) {
       toast.error("Please install MetaMask and login");
@@ -30,6 +31,7 @@ export const createEthereumPayment = async (id) => {
     }
 
     const transactionData = await api.post(`/payment/ethereum/create/${id}`);
+    orderId = transactionData.data.orderId;
     const response = await web3.eth.sendTransaction({
       from: accs[0],
       ...transactionData.data,
@@ -47,6 +49,7 @@ export const createEthereumPayment = async (id) => {
     }, 2000);
   } catch (e) {
     console.log(e);
+    if (orderId !== -1) await api.get(`/payment/ethereum/cancel/${orderId}`);
     toast.error("Please connect to MetaMask and try again");
   }
 };

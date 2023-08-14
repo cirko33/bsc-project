@@ -60,8 +60,8 @@ namespace Project.Services
                     {
                         amount = new Amount
                         {
-                            currency = "EUR",
-                            total = (product.Price * (1.0 - product.Discount / 100.0)).ToString()
+                            currency = "USD",
+                            total = Math.Round((product.Price * (1.0 - product.Discount / 100.0)), 2).ToString()
                         },
                         description = $"{product.Name}\n{product.Description}"
                     }
@@ -151,7 +151,7 @@ namespace Project.Services
 
             decimal price = await GetPriceInEth(_helperService.GetPrice(product));
 
-            return new EthereumPaymentDTO { To = product.Seller!.EthereumAddress ?? _configuration["Ethereum:Address"], Value = UnitConversion.Convert.ToWei(price).ToString(), Input = order.UniqueHash!};
+            return new EthereumPaymentDTO { To = product.Seller!.EthereumAddress ?? _configuration["Ethereum:Address"], Value = UnitConversion.Convert.ToWei(price).ToString(), Input = order.UniqueHash!, OrderId = order.Id};
         }
 
         public async Task CheckEthereumPayment(string transactionHash)
@@ -167,10 +167,8 @@ namespace Project.Services
                 if(!_configuration["Ethereum:Address"]!.ToLower().Contains(block.To.ToLower()))
                     throw new BadRequestException("You made wrong transaction.");
             }
-            else
-            {
-                if (!sellerAddress.ToLower().Contains(block.To.ToLower()))
-                    throw new BadRequestException("You made wrong transaction.");
+            else if (!sellerAddress.ToLower().Contains(block.To.ToLower())) {
+                throw new BadRequestException("You made wrong transaction.");
             }
 
             decimal price = await GetPriceInEth((double)order.Price!);
@@ -181,6 +179,17 @@ namespace Project.Services
             _unitOfWork.Orders.Update(order);
             await _unitOfWork.Save();
             _ = Task.Run(() => _helperService.SendEmail($"Thank you for your purchase! Your key for {order.ProductKey!.Product!.Name}", $"KEY: {order.ProductKey.Key}", order.Buyer!.Email!));
+        }
+
+        public async Task CancelEthereumPayment(int orderId)
+        {
+            var order = await _unitOfWork.Orders.Get(x => x.Id == orderId, new() { "ProductKey.Product" })
+                ?? throw new NotFoundException("No order");
+
+            order.ProductKey!.Sold = false;
+            order.State = OrderState.Cancelled;
+            _unitOfWork.Orders.Update(order);
+            await _unitOfWork.Save();
         }
     }
 }
