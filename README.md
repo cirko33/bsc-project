@@ -1,5 +1,5 @@
 # Bachelors project
 Technologies:
-- .NET Core 6
+- .NET Core 7
 - React
-- MySQL DB
+- MSSQL DB
