@@ -12,6 +12,7 @@ namespace Project.Models
         public User? Buyer { get; set; }
         [Required]
         public int ProductKeyId { get; set; }
+        public string? UniqueHash { get; set; }
         public ProductKey? ProductKey { get; set; }
         [Required]
         public double? Price { get; set; }

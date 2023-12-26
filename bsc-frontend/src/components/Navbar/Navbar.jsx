@@ -13,7 +13,7 @@ import {
   Tooltip,
   MenuItem,
 } from "@mui/material";
-import { getImageLink, loggedIn, logout, userInRole } from "../../services/userService";
+import { getImageLink, loggedIn, logout } from "../../services/userService";
 import UserContext from "../../store/user-context";
 
 const pages = ["Login", "Register"];
@@ -92,40 +92,42 @@ const Navbar = () => {
             >
               {loggedIn()
                 ? loggedPages.map((page) => (
-                    <MenuItem key={page} onClick={() => handleCloseNavMenu1(page)}>
+                    <MenuItem
+                      key={page}
+                      onClick={() => handleCloseNavMenu1(page)}
+                    >
                       <Typography textAlign="center">{page}</Typography>
                     </MenuItem>
                   ))
                 : pages.map((page) => (
-                    <MenuItem key={page} onClick={() => handleCloseNavMenu1(page)}>
+                    <MenuItem
+                      key={page}
+                      onClick={() => handleCloseNavMenu1(page)}
+                    >
                       <Typography textAlign="center">{page}</Typography>
                     </MenuItem>
                   ))}
-              {loggedIn() && !userInRole("Administrator") && (
-                <MenuItem onClick={() => handleCloseNavMenu1("Orders")}>
-                  <Typography textAlign="center">Orders</Typography>
-                </MenuItem>
-              )}
             </Menu>
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {loggedIn()
               ? loggedPages.map((page) => (
-                  <MenuItem key={page} onClick={() => handleCloseNavMenu1(page)}>
+                  <MenuItem
+                    key={page}
+                    onClick={() => handleCloseNavMenu1(page)}
+                  >
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))
               : pages.map((page) => (
-                  <MenuItem key={page} onClick={() => handleCloseNavMenu1(page)}>
+                  <MenuItem
+                    key={page}
+                    onClick={() => handleCloseNavMenu1(page)}
+                  >
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
-            {loggedIn() && !userInRole("Administrator") && (
-              <MenuItem onClick={() => handleCloseNavMenu1("Orders")}>
-                <Typography textAlign="center">Orders</Typography>
-              </MenuItem>
-            )}
           </Box>
 
           {loggedIn() && (
@@ -152,7 +154,10 @@ const Navbar = () => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={() => handleCloseUserMenu1(setting)}>
+                  <MenuItem
+                    key={setting}
+                    onClick={() => handleCloseUserMenu1(setting)}
+                  >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}

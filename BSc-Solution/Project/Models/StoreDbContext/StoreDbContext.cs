@@ -54,6 +54,16 @@ namespace Project.Models.StoreDbContext
                     Type = UserType.Buyer,
                 }
             );
+
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                Id = 1,
+                Name = "Windows 10",
+                Price = 100,
+                Description = "Fast",
+                Discount = 85,
+                SellerId = 2,
+            });
         }
     }
 }

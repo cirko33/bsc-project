@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Paper,
   Table,
@@ -9,8 +10,8 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { tableColumns } from "../../../helpers/renderHelpers";
-import { deleteBlock } from "../../../services/userService";
+import { deleteBlock, getImageLink } from "../../../services/userService";
+import { dateToString } from "../../../helpers/helpers";
 
 const UsersTable = ({ users, updateUsers }) => {
   return (
@@ -21,9 +22,14 @@ const UsersTable = ({ users, updateUsers }) => {
       <Table>
         <TableHead>
           <TableRow>
-            {users &&
-              users.length > 0 &&
-              Object.keys(users[0]).map((key, index) => <TableCell key={index}>{key}</TableCell>)}
+            <TableCell>Username</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Full name</TableCell>
+            <TableCell>Birthday</TableCell>
+            <TableCell>Address</TableCell>
+            <TableCell>Type</TableCell>
+            <TableCell>Image</TableCell>
+            <TableCell>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -31,9 +37,15 @@ const UsersTable = ({ users, updateUsers }) => {
             users.length > 0 &&
             users.map((user, index) => (
               <TableRow key={index}>
-                {Object.keys(user).map((key, index) => (
-                  <TableCell key={index}>{tableColumns(key, user)}</TableCell>
-                ))}
+                <TableCell>{user.username}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.fullName}</TableCell>
+                <TableCell>{dateToString(user.birthday)}</TableCell>
+                <TableCell>{user.address}</TableCell>
+                <TableCell>{user.type}</TableCell>
+                <TableCell>
+                  <Avatar alt="Profile pic" width={40} height={20} src={getImageLink(user.image)} />
+                </TableCell>
                 <TableCell>
                   <Button
                     variant="outlined"

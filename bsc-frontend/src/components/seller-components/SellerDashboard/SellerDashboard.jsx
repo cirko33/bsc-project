@@ -26,11 +26,17 @@ const SellerDashboard = () => {
       .catch((err) => console.log(err));
   };
   return (
-    <div>
-      <div style={{ float: "right" }}>
+    <div className="dashboard-container">
+      <div className="moved-left">
+        <Products
+          products={products}
+          updateProducts={updateProducts}
+          title="My products"
+        />
+      </div>
+      <div className="moved-right">
         <Orders orders={orders} updateOrders={updateOrders} />
       </div>
-      <Products products={products} updateProducts={updateProducts} title="My products" />
     </div>
   );
 };

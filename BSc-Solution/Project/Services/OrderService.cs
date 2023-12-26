@@ -27,6 +27,7 @@ namespace Project.Services
             var user = await _unitOfWork.Users.Get(x => x.Id == userId && x.Type == UserType.Buyer, new() { "Orders.ProductKey.Product.Seller" })
                 ?? throw new UnauthorizedException("This user doesn't exist!");
 
+            user.Orders!.Reverse();
             return _mapper.Map<List<BuyerOrderDTO>>(user.Orders!); ;
         }
 
@@ -52,7 +53,8 @@ namespace Project.Services
 
         public async Task<List<OrderDTO>> GetOrders()
         {
-            var orders = await _unitOfWork.Orders.GetAll();
+            var orders = await _unitOfWork.Orders.GetAll(null, null, new() { "ProductKey.Product", "Buyer"});
+            orders.Reverse();
             return _mapper.Map<List<OrderDTO>>(orders);
         }
 
@@ -65,6 +67,7 @@ namespace Project.Services
             var ids = user.Products!.Select(x => x.Id);
             orders = orders.FindAll(x => ids.Contains(x.ProductKey!.ProductId));
             orders.Reverse();
+            orders.RemoveAll(x => x.State != OrderState.Confirmed);
             return _mapper.Map<List<OrderDTO>>(orders);
         }
 
@@ -103,7 +106,7 @@ namespace Project.Services
                         order.ProductKey!.Sold = false;
                         _unitOfWork.Orders.Update(order);
                         await _unitOfWork.Save();
-                        await _helperService.SendEmail("Order cancelled", $"Your order was cancelled due 5min expiration.", user.Email!);
+                        await _helperService.SendEmail("Order cancelled", $"Your order was cancelled due 5  min expiration.", user.Email!);
                     }
             });
             return order;

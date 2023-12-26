@@ -1,8 +1,9 @@
 import { LoginOutlined } from "@mui/icons-material";
 import { Button, Card, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { login } from "../../services/userService";
+import { googleLogin, login } from "../../services/userService";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   const [data, setData] = useState({
@@ -55,6 +56,7 @@ const Login = () => {
         variant="contained"
         sx={{
           marginTop: "10px",
+          marginBottom: "10px",
           width: "100%",
           color: "#fff",
           backgroundColor: "#2f3e6f",
@@ -65,6 +67,14 @@ const Login = () => {
       >
         <LoginOutlined />
       </Button>
+      <GoogleLogin
+        onSuccess={async (e) => {
+          await googleLogin(e);
+          navigate("/dashboard");
+        }}
+        onError={(e) => alert("Invalid google email.")}
+        width="280px"
+      />
     </Card>
   );
 };

@@ -21,7 +21,12 @@ const Orders = ({ orders, updateOrders }) => {
       <Typography
         variant="h4"
         component="div"
-        sx={{ mb: "20px", color: "wheat", display: "flex", justifyContent: "center" }}
+        sx={{
+          mb: "20px",
+          color: "wheat",
+          display: "flex",
+          justifyContent: "center",
+        }}
       >
         Orders
       </Typography>
@@ -32,7 +37,9 @@ const Orders = ({ orders, updateOrders }) => {
             <CardContent>
               <Typography>Ordered: {dateTimeToString(o.orderTime)}</Typography>
               <Typography>Price: {o.price.toFixed(2)}$</Typography>
-              {!userInRole("Buyer") && <Typography>Buyer: {o.buyer.fullName}</Typography>}
+              {!userInRole("Buyer") && (
+                <Typography>Buyer: {o.buyer.fullName}</Typography>
+              )}
               <Typography>Product: {o.product.name}</Typography>
               {userInRole("Buyer") && o.state === 1 && (
                 <Button

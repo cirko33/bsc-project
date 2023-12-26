@@ -1,4 +1,5 @@
 ﻿using Project.Models;
+using System.Runtime.CompilerServices;
 
 namespace Project.Interfaces
 {
@@ -7,5 +8,6 @@ namespace Project.Interfaces
         Task SendEmail(string subject, string body, string receiver);
         string SaveImage(IFormFile image);
         string GetToken(User user);
+        double GetPrice(Product product);
     }
 }

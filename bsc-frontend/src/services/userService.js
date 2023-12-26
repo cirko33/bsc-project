@@ -10,10 +10,22 @@ export const getToken = () => {
 export const register = async (data) => {
   try {
     const formData = toFormData(data);
-    await api.post("/user/register", formData, { headers: { "Content-Type": "multipart/form-data" } });
+    await api.post("/user/register", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   } catch (e) {
     throwWarning(e);
     return Promise.reject(e);
+  }
+};
+
+export const googleLogin = async (data) => {
+  try {
+    const res = await api.post("/user/google-sign-in", { token: data.credential });
+    if (!res) return;
+    localStorage.setItem("token", res.data);
+  } catch (e) {
+    alert(e.response.data.Exception);
   }
 };
 
@@ -44,7 +56,9 @@ export const getUser = async () => {
 export const putUser = async (data) => {
   try {
     const formData = toFormData(data);
-    const res = await api.put("/user", formData, { headers: { "Content-Type": "multipart/form-data" } });
+    const res = await api.put("/user", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return res.data;
   } catch (e) {
     throwWarning(e);
@@ -68,7 +82,7 @@ export const loggedIn = () => {
 };
 
 export const getImageLink = (imageName) => {
-  if (imageName) return import.meta.env.VITE_LINK + "/user/image/" + imageName;
+  if (imageName) return process.env.REACT_APP_LINK + "/user/image/" + imageName;
   return "default.jpg";
 };
 

@@ -22,6 +22,7 @@ namespace Project.Models
         public string? Image { get; set; }
         [Required]
         public List<Order>? Orders { get; set; }
+        public string? EthereumAddress { get; set; }
         [Required]
         public bool Blocked { get; set; } = false;
         public List<Product>? Products { get; set; }

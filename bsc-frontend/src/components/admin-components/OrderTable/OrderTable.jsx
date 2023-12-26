@@ -1,16 +1,5 @@
-import {
-  Button,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
-import { tableColumns } from "../../../helpers/renderHelpers";
-import { deleteBlock } from "../../../services/userService";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { dateTimeToString } from "../../../helpers/helpers";
 
 const OrderTable = ({ orders, updateOrders }) => {
   return (
@@ -21,9 +10,11 @@ const OrderTable = ({ orders, updateOrders }) => {
       <Table>
         <TableHead>
           <TableRow>
-            {orders &&
-              orders.length > 0 &&
-              Object.keys(orders[0]).map((key, index) => <TableCell key={index}>{key}</TableCell>)}
+            <TableCell>Order time</TableCell>
+            <TableCell>Price</TableCell>
+            <TableCell>Buyer</TableCell>
+            <TableCell>Product</TableCell>
+            <TableCell>State</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -31,14 +22,11 @@ const OrderTable = ({ orders, updateOrders }) => {
             orders.length > 0 &&
             orders.map((order, index) => (
               <TableRow key={index}>
-                {Object.keys(order).map((key, index) => (
-                  <TableCell key={index}>{tableColumns(key, order)}</TableCell>
-                ))}
-                <TableCell>
-                  <Button variant="outlined" color="info">
-                    Info
-                  </Button>
-                </TableCell>
+                <TableCell>{dateTimeToString(order.orderTime)}</TableCell>
+                <TableCell>{order.price.toFixed(2)}$</TableCell>
+                <TableCell>{order.buyer.email}</TableCell>
+                <TableCell>{order.product.name}</TableCell>
+                <TableCell>{order.state === 0 ? "Waiting" : order.state === 1 ? "Confirmed" : "Cancelled"}</TableCell>
               </TableRow>
             ))}
         </TableBody>

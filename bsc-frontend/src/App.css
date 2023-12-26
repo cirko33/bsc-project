@@ -115,10 +115,37 @@
   flex: 1 1 250px;
 }
 
-.moved-right {
-  float: right;
+.dashboard-container {
+  display: flex;
+  width: 100%;
 }
 
-.moved-right > * {
-  margin-left: auto;
+.moved-right {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+
+.moved-left {
+  width: 80%;
+}
+
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    display: block;
+  }
+  .moved-right {
+    width: 90%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .moved-left {
+    width: 90%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }

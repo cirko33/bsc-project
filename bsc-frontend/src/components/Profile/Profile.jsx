@@ -2,7 +2,7 @@ import { Button, Card, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
-import { getImageLink, putUser } from "../../services/userService";
+import { getImageLink, putUser, userInRole } from "../../services/userService";
 import { toast } from "react-toastify";
 import UserContext from "../../store/user-context";
 
@@ -13,11 +13,13 @@ const Profile = () => {
     password: "",
     email: "",
     fullName: "",
-    birthday: "",
+    birthday: dayjs("1/1/1999"),
     address: "",
+    ethereumAddress: "",
   });
+
   useEffect(() => {
-    setData({ ...data, ...user, birthday: dayjs(user.birthday) });
+    setData({ ...data, ...user, birthday: dayjs(user.birthday ? user.birthday : "1/1/1999") });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -27,13 +29,25 @@ const Profile = () => {
 
   const submit = async (e) => {
     e.preventDefault();
+    if (data.ethereumAddress && !data.ethereumAddress.match("^0x[a-fA-F0-9]{40}$")) {
+      toast.error("Ethereum address is not valid (must start with 0x and be 40 characters long)");
+      return;
+    }
     await putUser(data);
     updateUser(data);
     toast.success("Profile updated successfully");
   };
 
   return (
-    <Card component="form" sx={{ padding: "20px", margin: "20px", maxWidth: "24rem", bgcolor: "#2f3e6f" }}>
+    <Card
+      component="form"
+      sx={{
+        padding: "20px",
+        margin: "20px",
+        maxWidth: "24rem",
+        bgcolor: "#2f3e6f",
+      }}
+    >
       <Typography variant="h4" sx={{ marginBottom: "30px", textAlign: "center" }}>
         Profile
       </Typography>
@@ -81,6 +95,24 @@ const Profile = () => {
         label="Full Name"
         onChange={handleChange}
       />
+      {userInRole("Seller") && (
+        <>
+          <TextField
+            sx={{ marginBottom: "10px", width: "100%" }}
+            value={data.ethereumAddress}
+            name="ethereumAddress"
+            type="text"
+            label="Ethereum Address"
+            pattern=""
+            onChange={handleChange}
+          />
+          {!data.ethereumAddress && (
+            <label style={{ width: "100%", color: "red" }}>
+              If not entered our shop will receive your payment and send you money monthly with charges
+            </label>
+          )}
+        </>
+      )}
       <DatePicker
         required
         sx={{ marginBottom: "10px", width: "100%" }}
@@ -96,7 +128,7 @@ const Profile = () => {
             dayjs(val).isAfter(dayjs().subtract(18, "years")) ||
             dayjs(val).isBefore(dayjs("1/1/1900"))
           ) {
-            alert("Invalid birthday");
+            toast.warning("Invalid birthday");
             return;
           }
 
@@ -116,6 +148,7 @@ const Profile = () => {
         src={
           data.imageFile ? URL.createObjectURL(data.imageFile) : data.image ? getImageLink(data.image) : "default.jpg"
         }
+        alt="profile"
         className="img-profile"
       />
       <TextField

@@ -3,8 +3,9 @@ import { Button, Card, MenuItem, Select, TextField, Typography } from "@mui/mate
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { login, register } from "../../services/userService";
+import { googleLogin, login, register } from "../../services/userService";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -112,7 +113,11 @@ const Register = () => {
         label="Address"
         onChange={handleChange}
       />
-      <img src={data.imageFile ? URL.createObjectURL(data.imageFile) : "./default.jpg"} className="img-profile" />
+      <img
+        src={data.imageFile ? URL.createObjectURL(data.imageFile) : "./default.jpg"}
+        className="img-profile"
+        alt="Pict"
+      />
       <TextField
         required
         sx={{ marginBottom: "10px", width: "100%" }}
@@ -135,6 +140,7 @@ const Register = () => {
         variant="contained"
         sx={{
           marginTop: "10px",
+          marginBottom: "10px",
           width: "100%",
           color: "#fff",
           backgroundColor: "#2f3e6f",
@@ -145,6 +151,14 @@ const Register = () => {
       >
         <AppRegistrationOutlined />
       </Button>
+      <GoogleLogin
+        onSuccess={async (e) => {
+          await googleLogin(e);
+          navigate("/dashboard");
+        }}
+        onError={(e) => alert("Invalid google email.")}
+        width="345px"
+      />
     </Card>
   );
 };

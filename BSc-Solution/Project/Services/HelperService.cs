@@ -22,6 +22,11 @@ namespace Project.Services
             _configuration = configuration;
         }
 
+        public double GetPrice(Product product)
+        {
+            return product.Price - (product.Price * product.Discount / 100);
+        }
+
         public string GetToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
@@ -60,6 +65,9 @@ namespace Project.Services
                 }));
 
                 string name = DateTime.Now.Ticks.ToString() + Path.GetExtension(image.FileName);
+                if (!Directory.Exists("Resources"))
+                    Directory.CreateDirectory("Resources");
+
                 img.Save(Path.Combine("Resources", name));
                 return name;
             }
